@@ -5,6 +5,7 @@ Offline Proof-of-Concept for analyzing Lane Departure Warning (LDW) nuisance ale
 This repo focuses on the PoC experience and UI. The core algorithm is based on my separate repo [adas-ldw-cli](https://github.com/ddepasquali/adas-ldw-cli) (algorithm-only pipeline). This repo contains a synced copy of the pipeline for convenience, but treat [adas-ldw-cli](https://github.com/ddepasquali/adas-ldw-cli) as the source of truth for the algorithm.
 
 ![ui_demo](https://github.com/user-attachments/assets/675fda10-ddf5-4cd0-9bea-00c665721821)
+*UI demo in action.*
 
 ## Status and scope
 - Research PoC, offline only (no real-time inference).
