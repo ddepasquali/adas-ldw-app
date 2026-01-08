@@ -1,0 +1,6 @@
+numpy==1.26.4
+pandas
+opencv-contrib-python==4.11.0.86
+mediapipe==0.10.18
+ultralytics
+pyyaml

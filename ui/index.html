@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADAS LDW GUI</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app">
+    <div class="dashboard">
+      <main class="main-grid">
+        <section class="panel panel--media" style="--delay: 0.05s;">
+          <div class="panel-header">
+            <div class="title-group">
+              <h2>Road</h2>
+              <span class="panel-subtitle">DJI Osmo 360</span>
+            </div>
+            <div class="chip chip--muted" id="roadStatusChip">
+              <span class="dot"></span>
+              N/A
+            </div>
+          </div>
+          <div class="media-frame">
+            <video id="roadVideo" class="media-video" muted playsinline preload="auto"></video>
+            <div class="media-fallback" id="roadFallback">Video not loaded</div>
+            <details class="flag-picker">
+              <summary class="flag-picker__summary">Road flags</summary>
+              <div class="flag-picker__panel">
+                <div class="flag-picker__header">
+                  <span class="flag-picker__title">All</span>
+                  <label class="switch switch--small">
+                    <input type="checkbox" checked data-flag-group="road" aria-label="Toggle all road flags">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="flag-list">
+                  <div class="flag-item">
+                    <span>Lane overlay</span>
+                    <label class="switch switch--small">
+                      <input type="checkbox" checked data-flag-item="road" aria-label="Lane overlay">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                  <div class="flag-item">
+                    <span>Object overlay</span>
+                    <label class="switch switch--small">
+                      <input type="checkbox" checked data-flag-item="road" aria-label="Object overlay">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                  <div class="flag-item">
+                    <span>Lane edges</span>
+                    <label class="switch switch--small">
+                      <input type="checkbox" checked data-flag-item="road" aria-label="Lane edges">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                  <div class="flag-item">
+                    <span>ROI box</span>
+                    <label class="switch switch--small">
+                      <input type="checkbox" checked data-flag-item="road" aria-label="ROI box">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+          <div class="panel-footer">
+            <div class="mini-metric">
+              <span class="mini-label">Offset</span>
+              <span class="mini-value" data-source="fused" data-field="road_lane_lane_offset_m" data-precision="2">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">Lane conf</span>
+              <span class="mini-value" data-source="fused" data-field="road_lane_lane_conf" data-precision="2">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">Lane w px</span>
+              <span class="mini-value" data-source="fused" data-field="road_lane_lane_width_px" data-precision="0">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">Speed km/h</span>
+              <span class="mini-value" data-source="fused" data-field="obd_obd_Vehicle Speed Sensor [km/h]" data-precision="1">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">Objects</span>
+              <span class="mini-value" data-source="fused" data-field="road_scene_obj_count" data-precision="0">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">Vehicles</span>
+              <span class="mini-value" data-source="fused" data-field="road_scene_vehicles_count" data-precision="0">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">VRU</span>
+              <span class="mini-value" data-source="fused" data-field="road_scene_vuln_count" data-precision="0">--</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel--media" id="driverPanel" style="--delay: 0.08s;">
+          <div class="panel-header">
+            <div class="title-group">
+              <h2>Driver</h2>
+              <span class="panel-subtitle">DJI Osmo 360</span>
+            </div>
+            <div class="chip chip--muted" id="driverStatusChip">
+              <span class="dot"></span>
+              N/A
+            </div>
+          </div>
+          <div class="media-frame media-frame--driver">
+            <video id="driverVideo" class="media-video" muted playsinline preload="auto"></video>
+            <div class="media-fallback" id="driverFallback">Video not loaded</div>
+            <details class="flag-picker">
+              <summary class="flag-picker__summary">Driver flags</summary>
+              <div class="flag-picker__panel">
+                <div class="flag-picker__header">
+                  <span class="flag-picker__title">All</span>
+                  <label class="switch switch--small">
+                    <input type="checkbox" checked data-flag-group="driver" aria-label="Toggle all driver flags">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="flag-list">
+                  <div class="flag-item">
+                    <span>Face mesh</span>
+                    <label class="switch switch--small">
+                      <input type="checkbox" checked data-flag-item="driver" aria-label="Face mesh">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                  <div class="flag-item">
+                    <span>Gaze vector</span>
+                    <label class="switch switch--small">
+                      <input type="checkbox" checked data-flag-item="driver" aria-label="Gaze vector">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                  <div class="flag-item">
+                    <span>Attention label</span>
+                    <label class="switch switch--small">
+                      <input type="checkbox" checked data-flag-item="driver" aria-label="Attention label">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                  <div class="flag-item">
+                    <span>Fatigue score</span>
+                    <label class="switch switch--small">
+                      <input type="checkbox" checked data-flag-item="driver" aria-label="Fatigue score">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+          <div class="panel-footer">
+            <div class="mini-metric">
+              <span class="mini-label">Gaze prob</span>
+              <span class="mini-value" data-source="fused" data-field="driver_gaze_on_road_prob" data-precision="2">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">Eye EAR</span>
+              <span class="mini-value" data-source="fused" data-field="driver_eye_ear" data-precision="3">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">EAR L</span>
+              <span class="mini-value" data-source="fused" data-field="driver_eye_ear_left" data-precision="3">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">EAR R</span>
+              <span class="mini-value" data-source="fused" data-field="driver_eye_ear_right" data-precision="3">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">Head yaw</span>
+              <span class="mini-value" data-source="fused" data-field="driver_head_yaw_proxy" data-precision="2">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">Yaw deg</span>
+              <span class="mini-value" data-source="fused" data-field="driver_head_yaw_deg" data-precision="1">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">Pitch deg</span>
+              <span class="mini-value" data-source="fused" data-field="driver_head_pitch_deg" data-precision="1">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">Roll deg</span>
+              <span class="mini-value" data-source="fused" data-field="driver_head_roll_deg" data-precision="1">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">Face conf</span>
+              <span class="mini-value" data-source="fused" data-field="driver_face_conf" data-precision="2">--</span>
+            </div>
+            <div class="mini-metric">
+              <span class="mini-label">Mouth MAR</span>
+              <span class="mini-value" data-source="fused" data-field="driver_mouth_mar" data-precision="2">--</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel--lane" style="--delay: 0.1s;">
+          <div class="panel-header">
+            <div class="title-group">
+              <h3>Left</h3>
+              <span class="panel-subtitle">Lane</span>
+            </div>
+            <span class="chip chip--muted" id="leftLaneStatus">N/A</span>
+          </div>
+          <div class="lane-frame lane-frame--left">
+            <div class="lane-track" data-side="left">
+              <span class="lane-car" aria-hidden="true"></span>
+            </div>
+            <div class="lane-indicator lane-indicator--left">
+              <div class="lane-line">
+                <span class="lane-value" id="leftLaneDist">--</span>
+                <span class="lane-unit">m</span>
+              </div>
+              <div class="lane-line">
+                <span class="lane-value" id="leftLaneTlc">--</span>
+                <span class="lane-unit">s</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel--lane" style="--delay: 0.12s;">
+          <div class="panel-header">
+            <div class="title-group">
+              <h3>Right</h3>
+              <span class="panel-subtitle">Lane</span>
+            </div>
+            <span class="chip chip--muted" id="rightLaneStatus">N/A</span>
+          </div>
+          <div class="lane-frame lane-frame--right">
+            <div class="lane-track lane-track--right" data-side="right">
+              <span class="lane-car" aria-hidden="true"></span>
+            </div>
+            <div class="lane-indicator lane-indicator--right">
+              <div class="lane-line">
+                <span class="lane-value" id="rightLaneDist">--</span>
+                <span class="lane-unit">m</span>
+              </div>
+              <div class="lane-line">
+                <span class="lane-value" id="rightLaneTlc">--</span>
+                <span class="lane-unit">s</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel--sensor panel--sensor-compact" style="--delay: 0.15s;">
+          <div class="panel-header">
+            <div class="title-group">
+              <h3>ECG</h3>
+              <span class="panel-subtitle">Polar H10</span>
+            </div>
+            <div class="sensor-badges">
+              <div class="chip-group" data-chart-mode-group="polar" data-default-mode="hrv">
+                <button class="chip chip--accent chip--selectable" type="button" data-chart-mode="hrv" aria-pressed="true">HRV</button>
+                <button class="chip chip--muted chip--selectable" type="button" data-chart-mode="quality" aria-pressed="false">Quality</button>
+              </div>
+              <span class="chip chip--accent chip--frequency">10 Hz</span>
+            </div>
+          </div>
+          <div class="panel-body panel-body--chart">
+            <div class="chart-placeholder chart-placeholder--compact" data-chart="polar">
+              <svg class="chart-svg" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+                <g class="chart-lines"></g>
+                <line class="chart-cursor" x1="0" y1="0" x2="0" y2="40"></line>
+              </svg>
+              <div class="chart-legend" data-legend="polar"></div>
+              <div class="chart-empty">Load data</div>
+            </div>
+            <div class="widget-stack is-active" data-widget-group="polar" data-widget-mode="hrv">
+              <div class="widget-card" style="--widget-color: #0a84ff;">
+                <div class="widget-label"><span class="widget-led"></span>RMSSD</div>
+                <div class="widget-value" data-source="polar" data-field="polar_rmssd" data-precision="1">--</div>
+                <div class="widget-meta">ms</div>
+              </div>
+              <div class="widget-card" style="--widget-color: #34c759;">
+                <div class="widget-label"><span class="widget-led"></span>SDNN</div>
+                <div class="widget-value" data-source="polar" data-field="polar_sdnn" data-precision="1">--</div>
+                <div class="widget-meta">ms</div>
+              </div>
+            </div>
+            <div class="widget-stack" data-widget-group="polar" data-widget-mode="quality">
+              <div class="widget-card" style="--widget-color: #0a84ff;">
+                <div class="widget-label"><span class="widget-led"></span>Quality</div>
+                <div class="widget-value" data-source="polar" data-field="polar_quality_pct" data-precision="0">--</div>
+                <div class="widget-meta">%</div>
+              </div>
+              <div class="widget-card" style="--widget-color: #34c759;">
+                <div class="widget-label"><span class="widget-led"></span>Reliable</div>
+                <div class="widget-value" data-source="polar" data-field="polar_reliable" data-precision="0">--</div>
+                <div class="widget-meta">flag</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel--sensor panel--sensor-compact" style="--delay: 0.18s;">
+          <div class="panel-header">
+            <div class="title-group">
+              <h3>EEG</h3>
+              <span class="panel-subtitle">Muse S Athena</span>
+            </div>
+            <div class="sensor-badges">
+              <div class="chip-group" data-chart-mode-group="muse" data-default-mode="bands">
+                <button class="chip chip--accent chip--selectable" type="button" data-chart-mode="bands" aria-pressed="true">Bands</button>
+                <button class="chip chip--muted chip--selectable" type="button" data-chart-mode="ratios" aria-pressed="false">Ratios</button>
+              </div>
+              <span class="chip chip--accent chip--frequency">10 Hz</span>
+            </div>
+          </div>
+          <div class="panel-body panel-body--chart">
+            <div class="chart-placeholder chart-placeholder--compact" data-chart="muse">
+              <svg class="chart-svg" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+                <g class="chart-lines"></g>
+                <line class="chart-cursor" x1="0" y1="0" x2="0" y2="40"></line>
+              </svg>
+              <div class="chart-legend" data-legend="muse"></div>
+              <div class="chart-empty">Load data</div>
+            </div>
+            <div class="widget-stack widget-stack--scroll is-active" data-widget-group="muse" data-widget-mode="bands">
+              <div class="widget-card" style="--widget-color: #0a84ff;">
+                <div class="widget-label"><span class="widget-led"></span>Alpha</div>
+                <div class="widget-value" data-source="muse" data-field="muse_alpha_mean" data-precision="3">--</div>
+                <div class="widget-meta">mean</div>
+              </div>
+              <div class="widget-card" style="--widget-color: #ff9500;">
+                <div class="widget-label"><span class="widget-led"></span>Beta</div>
+                <div class="widget-value" data-source="muse" data-field="muse_beta_mean" data-precision="3">--</div>
+                <div class="widget-meta">mean</div>
+              </div>
+              <div class="widget-card" style="--widget-color: #34c759;">
+                <div class="widget-label"><span class="widget-led"></span>Theta</div>
+                <div class="widget-value" data-source="muse" data-field="muse_theta_mean" data-precision="3">--</div>
+                <div class="widget-meta">mean</div>
+              </div>
+              <div class="widget-card" style="--widget-color: #af52de;">
+                <div class="widget-label"><span class="widget-led"></span>Gamma</div>
+                <div class="widget-value" data-source="muse" data-field="muse_gamma_mean" data-precision="3">--</div>
+                <div class="widget-meta">mean</div>
+              </div>
+            </div>
+            <div class="widget-stack widget-stack--fill" data-widget-group="muse" data-widget-mode="ratios">
+              <div class="widget-card" style="--widget-color: #ff9500;">
+                <div class="widget-label"><span class="widget-led"></span>Beta/Alpha</div>
+                <div class="widget-value" data-source="muse" data-field="muse_beta_alpha_ratio" data-precision="3">--</div>
+                <div class="widget-meta">ratio</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel--sensor panel--sensor-compact" style="--delay: 0.2s;">
+          <div class="panel-header">
+            <div class="title-group">
+              <h3>OBD II</h3>
+              <span class="panel-subtitle">ELM327 (Wi-Fi)</span>
+            </div>
+            <div class="sensor-badges">
+              <div class="chip-group" data-chart-mode-group="obd" data-default-mode="vehicle">
+                <button class="chip chip--accent chip--selectable" type="button" data-chart-mode="vehicle" aria-pressed="true">Powertrain</button>
+                <button class="chip chip--muted chip--selectable" type="button" data-chart-mode="throttle" aria-pressed="false">Load</button>
+              </div>
+              <span class="chip chip--accent chip--frequency">10 Hz</span>
+            </div>
+          </div>
+          <div class="panel-body panel-body--chart">
+            <div class="chart-placeholder chart-placeholder--compact" data-chart="obd">
+              <svg class="chart-svg" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+                <g class="chart-lines"></g>
+                <line class="chart-cursor" x1="0" y1="0" x2="0" y2="40"></line>
+              </svg>
+              <div class="chart-legend" data-legend="obd"></div>
+              <div class="chart-empty">Load data</div>
+            </div>
+            <div class="widget-stack widget-stack--horizontal is-active" data-widget-group="obd" data-widget-mode="vehicle">
+              <div class="widget-card" style="--widget-color: #0a84ff;">
+                <div class="widget-label"><span class="widget-led"></span>Speed</div>
+                <div class="widget-value" data-source="obd" data-field="obd_Vehicle Speed Sensor [km/h]" data-precision="1">--</div>
+                <div class="widget-meta">km/h</div>
+              </div>
+              <div class="widget-card" style="--widget-color: #ff9500;">
+                <div class="widget-label"><span class="widget-led"></span>RPM</div>
+                <div class="widget-value" data-source="obd" data-field="obd_Engine RPM [RPM]" data-precision="0">--</div>
+                <div class="widget-meta">rpm</div>
+              </div>
+            </div>
+            <div class="widget-stack widget-stack--horizontal" data-widget-group="obd" data-widget-mode="throttle">
+              <div class="widget-card" style="--widget-color: #0a84ff;">
+                <div class="widget-label"><span class="widget-led"></span>Throttle</div>
+                <div class="widget-value" data-source="obd" data-field="obd_Absolute Throttle Position [%]" data-precision="0">--</div>
+                <div class="widget-meta">%</div>
+              </div>
+              <div class="widget-card" style="--widget-color: #34c759;">
+                <div class="widget-label"><span class="widget-led"></span>Torque</div>
+                <div class="widget-value" data-source="obd" data-field="obd_Engine torque [Nm]" data-precision="0">--</div>
+                <div class="widget-meta">Nm</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel--sensor panel--sensor-compact" style="--delay: 0.22s;">
+          <div class="panel-header">
+            <div class="title-group">
+              <h3>Phyphox</h3>
+              <span class="panel-subtitle">iPad Pro (13,8)</span>
+            </div>
+            <div class="sensor-badges">
+              <div class="chip-group" data-chart-mode-group="phyphox" data-default-mode="motion">
+                <button class="chip chip--accent chip--selectable" type="button" data-chart-mode="motion" aria-pressed="true">Acceleration</button>
+                <button class="chip chip--muted chip--selectable" type="button" data-chart-mode="rotation" aria-pressed="false">Gyro</button>
+              </div>
+              <span class="chip chip--accent chip--frequency">10 Hz</span>
+            </div>
+          </div>
+          <div class="panel-body panel-body--chart">
+            <div class="chart-placeholder chart-placeholder--compact" data-chart="phyphox">
+              <svg class="chart-svg" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+                <g class="chart-lines"></g>
+                <line class="chart-cursor" x1="0" y1="0" x2="0" y2="40"></line>
+              </svg>
+              <div class="chart-legend" data-legend="phyphox"></div>
+              <div class="chart-empty">Load data</div>
+            </div>
+            <div class="widget-stack widget-stack--scroll is-active" data-widget-group="phyphox" data-widget-mode="motion">
+              <div class="widget-card" style="--widget-color: #0a84ff;">
+                <div class="widget-label"><span class="widget-led"></span>Accel X</div>
+                <div class="widget-value" data-source="phyphox" data-field="phy_X (m/s^2)" data-precision="2">--</div>
+                <div class="widget-meta">m/s^2</div>
+              </div>
+              <div class="widget-card" style="--widget-color: #34c759;">
+                <div class="widget-label"><span class="widget-led"></span>Accel Y</div>
+                <div class="widget-value" data-source="phyphox" data-field="phy_Y (m/s^2)" data-precision="2">--</div>
+                <div class="widget-meta">m/s^2</div>
+              </div>
+              <div class="widget-card" style="--widget-color: #ff9500;">
+                <div class="widget-label"><span class="widget-led"></span>Accel Z</div>
+                <div class="widget-value" data-source="phyphox" data-field="phy_Z (m/s^2)" data-precision="2">--</div>
+                <div class="widget-meta">m/s^2</div>
+              </div>
+            </div>
+            <div class="widget-stack widget-stack--scroll" data-widget-group="phyphox" data-widget-mode="rotation">
+              <div class="widget-card" style="--widget-color: #0a84ff;">
+                <div class="widget-label"><span class="widget-led"></span>Gyro X</div>
+                <div class="widget-value" data-source="phyphox" data-field="phy_X (rad/s)" data-precision="3">--</div>
+                <div class="widget-meta">rad/s</div>
+              </div>
+              <div class="widget-card" style="--widget-color: #34c759;">
+                <div class="widget-label"><span class="widget-led"></span>Gyro Y</div>
+                <div class="widget-value" data-source="phyphox" data-field="phy_Y (rad/s)" data-precision="3">--</div>
+                <div class="widget-meta">rad/s</div>
+              </div>
+              <div class="widget-card" style="--widget-color: #ff9500;">
+                <div class="widget-label"><span class="widget-led"></span>Gyro Z</div>
+                <div class="widget-value" data-source="phyphox" data-field="phy_Z (rad/s)" data-precision="3">--</div>
+                <div class="widget-meta">rad/s</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <div class="panel panel--compact panel--action" style="--delay: 0.11s;">
+            <div class="action-row">
+              <div>
+                <div class="toggle-title" id="sessionTitle">Start session</div>
+                <div class="toggle-sub" id="sessionSubtitle">Press START to begin</div>
+              </div>
+              <div class="action-buttons">
+                <button class="action-btn action-btn--start" id="loadButton" aria-label="Start processing">START</button>
+                <button class="action-btn action-btn--icon" id="fileButton" aria-label="Carica file">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M12 3v10m0 0 4-4m-4 4-4-4M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="load-status" id="loadStatus">Database in use: data/feat, /video_converted</div>
+          </div>
+        </div>
+
+        <div class="panel panel--transport" style="--delay: 0.2s;">
+          <div class="transport-header">
+            <div>
+              <div class="transport-title">Time / total duration</div>
+              <div class="transport-time"><span id="currentTime">00:00:00</span> / <span id="totalTime">00:00:00</span></div>
+            </div>
+            <span class="chip chip--accent" id="transportRate">0.5x</span>
+          </div>
+          <div class="transport-bar">
+            <div class="transport-progress" id="transportProgress" style="width: 0%;"></div>
+          </div>
+          <div class="transport-controls">
+            <button class="control-btn" data-skip="-5">&lt;&lt;</button>
+            <button class="control-btn control-btn--play" id="playButton" aria-label="Play">
+              <span class="play-icon"></span>
+              <span class="pause-icon"></span>
+            </button>
+            <button class="control-btn" data-skip="5">&gt;&gt;</button>
+          </div>
+        </div>
+
+        <div class="panel" style="--delay: 0.14s;">
+          <div class="panel-header">
+            <div class="title-group">
+              <h3>Decision</h3>
+              <h3>Alert</h3>
+
+              <span class="panel-subtitle">Pipeline Output</span>
+            </div>
+            <span class="status-pill status-pill--muted" id="decisionStatus">N/A</span>
+          </div>
+          <div class="decision-body">
+            <div class="decision-score">
+              <div class="decision-label">Confidence</div>
+              <div class="decision-value" id="decisionConfidence">--</div>
+            </div>
+            <div class="decision-metrics">
+              <div class="mini-metric">
+                <span class="mini-label">Start</span>
+                <span class="mini-value" id="decisionStart">--</span>
+              </div>
+              <div class="mini-metric">
+                <span class="mini-label">End</span>
+                <span class="mini-value" id="decisionEnd">--</span>
+              </div>
+              <div class="mini-metric">
+                <span class="mini-label">Duration</span>
+                <span class="mini-value" id="decisionDuration">--</span>
+              </div>
+            </div>
+            <div class="decision-reasons" id="decisionReasons">
+              <div class="reason-item">
+                <span class="reason-dot reason-dot--warn"></span>
+                --
+              </div>
+              <div class="reason-item">
+                <span class="reason-dot reason-dot--warn"></span>
+                --
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel--log" style="--delay: 0.17s;">
+          <div class="panel-header">
+            <div class="title-group">
+              <h3>Log realtime</h3>
+              <span class="panel-subtitle">Latest events</span>
+            </div>
+            <span class="chip chip--muted">BUFFER</span>
+          </div>
+          <div class="log-list" id="logList"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <script src="./app.js"></script>
+</body>
+</html>
